@@ -1,7 +1,15 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 
-const featureData = [
+// Defined the data structure for better type safety
+interface FeatureItem {
+  id: number;
+  title: string;
+  price: string;
+  image: string;
+}
+
+const featureData: FeatureItem[] = [
   {
     id: 1,
     title: "1 BHK APARTMENT",
@@ -24,7 +32,8 @@ const featureData = [
 
 const Features: React.FC = () => {
   // Container animation for staggering the entrance of cards
-  const containerVariants = {
+  // Typed as Variants to avoid internal string errors
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -34,18 +43,24 @@ const Features: React.FC = () => {
     },
   };
 
-  // Individual card animation
-  const cardVariants = {
-    hidden: { y: 50, opacity: 0 },
+  // Individual card animation - Fixed TS2322 error
+  const cardVariants: Variants = {
+    hidden: { 
+      y: 50, 
+      opacity: 0 
+    },
     visible: { 
       y: 0, 
       opacity: 1,
-      transition: { duration: 0.8, ease: "easeOut" }
+      transition: { 
+        duration: 0.8, 
+        ease: [0.22, 1, 0.36, 1] // Using Cubic Bezier for smoother, type-safe animation
+      } 
     },
   };
 
   return (
-    <section className="bg-black text-[#D8CFBC] py-24 px-6 overflow-hidden">
+    <section className="bg-[#EBE0D8] text-[#7A4A4D] py-24 px-6 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         
         {/* Header Section */}
@@ -56,8 +71,8 @@ const Features: React.FC = () => {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          
-          <h2 className="text-[#FFFBF4] text-4xl font-extralight tracking-[0.3em] uppercase mb-8">Featured</h2>
+          <p className="text-[#B08682] uppercase tracking-[0.4em] text-xs mb-3 font-bold">Curated Spaces</p>
+          <h2 className="text-[#7A4A4D] text-4xl font-extralight tracking-[0.3em] uppercase">Featured</h2>
         </motion.div>
 
         {/* Features Grid */}
@@ -77,25 +92,27 @@ const Features: React.FC = () => {
               {/* Oval Image Container */}
               <motion.div 
                 whileHover={{ scale: 1.02 }}
-                className="w-full aspect-[4/5] rounded-t-full rounded-b-full overflow-hidden border border-[#565449]/30 bg-[#565449]"
+                className="w-full aspect-[4/5] rounded-t-full rounded-b-full overflow-hidden border border-[#B08682]/30 bg-[#F5F1EF] relative"
               >
                 <motion.img 
                   whileHover={{ scale: 1.1 }}
                   transition={{ duration: 0.6 }}
                   src={item.image} 
                   alt={item.title}
-                  className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity"
+                  className="w-full h-full object-cover opacity-60 group-hover:opacity-90 transition-opacity duration-500"
                 />
+                {/* Subtle Overlay Shadow */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#7A4A4D]/20" />
               </motion.div>
 
               {/* Text Info */}
               <div className="text-center mt-8 space-y-2">
-                <h3 className="text-xs tracking-[0.3em] font-light text-[#FFFBF4] uppercase">
+                <h3 className="text-xs tracking-[0.3em] font-semibold text-[#7A4A4D] uppercase">
                   {item.title}
                 </h3>
-                <p className="text-sm font-medium text-[#D8CFBC] opacity-70">
+                {/* <p className="text-sm font-medium text-[#565449] tracking-widest">
                   {item.price}
-                </p>
+                </p> */}
               </div>
             </motion.div>
           ))}
@@ -110,9 +127,14 @@ const Features: React.FC = () => {
           className="flex justify-center mt-20"
         >
           <motion.button 
-            whileHover={{ scale: 1.05, backgroundColor: "#FFFBF4", color: "#11120D" }}
+            whileHover={{ 
+              scale: 1.05, 
+              backgroundColor: "#B08682", 
+              color: "#F5F1EF",
+              borderColor: "#B08682" 
+            }}
             whileTap={{ scale: 0.95 }}
-            className="px-10 py-3 border border-[#565449] rounded-lg text-sm font-medium bg-transparent text-[#FFFBF4] transition-colors"
+            className="px-12 py-4 border border-[#B08682] rounded-full text-[10px] uppercase tracking-[0.2em] font-bold bg-transparent text-[#7A4A4D] transition-all duration-300"
           >
             Explore More
           </motion.button>
